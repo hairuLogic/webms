@@ -1,5 +1,5 @@
 <?php 
-	include_once('../../../assets/php/sschecker.php'); 
+	include_once('../../../../assets/php/sschecker.php'); 
 ?>
 <!DOCTYPE html>
 

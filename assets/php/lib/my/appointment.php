@@ -97,6 +97,32 @@
 		    	echo $e->getMessage();
 		    }
 		}
+		
+	    function get_appt_lst($docid)
+		{
+			
+			try    
+			{
+				$sql = "SELECT a.sysno,a.icnum
+						FROM hisdb.apptbook a
+						WHERE a.prov_id = '{$docid}'";
+						
+				$stmt = $this->db->query($sql);
+				$arr = array();
+				while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
+				{
+					$arr[] = $row;
+				}
+
+				$result = '{"appt_lst":' . json_encode($arr) . '}';
+
+				return $result;
+			}
+			catch(PDOException $e)
+		    {
+		    	echo $e->getMessage();
+		    }
+		}
 	}
 
 ?>
