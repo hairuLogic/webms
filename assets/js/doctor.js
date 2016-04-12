@@ -12,73 +12,220 @@ var Doctor = function () {
 	            }
 	        };
 	        	
-	        	console.log('remove cal');
-	        $('#calendar').fullCalendar( 'removeEventSource', events);
-	        	console.log('remove cal');
+	        	//console.log('remove cal');
+	        //$('#calendar').fullCalendar( 'removeEventSource', events);
+	        	//console.log('remove cal');
 	        $('#calendar').fullCalendar( 'addEventSource', events);         
-	        	console.log('remove cal');
-	        $('#calendar').fullCalendar( 'refetchEvents' );
+	        	//console.log('remove cal');
+	        //$('#calendar').fullCalendar( 'refetchEvents' );
 	        
 	        //$('#schDateTime').val('');
 	          			
-	        jQuery("#gridDialog").jqGrid().setGridParam({url : "/_research/webms/assets/php/entry_appt.php?action=get_all_calendar&id=&start=&end=&typ=grid"}).trigger("reloadGrid")
+	        //jQuery("#gridDialog").jqGrid().setGridParam({url : "/_research/webms/assets/php/entry_appt.php?action=get_all_calendar&id=&start=&end=&typ=grid"}).trigger("reloadGrid")
 
 	}
 	
 	function first_load(){
+	
+		var today=new Date();		
+		
+		$('#cmb_month').val(today.getMonth());
+		$('#cmb_year').val(today.getFullYear());
+	
+		$('#cmb_doctor-2').val('');
+		$('#cmb_doctor').val('');
+		$('#docid').val('');
+		
+		var tempVar = "";
+		var EventtempVar = "";
+		var lastdateclick = '';
+		
 		$('#calendar').fullCalendar({
 			header: {
 				left: '',
 				center: 'title',
 				right: 'prev,next month,agendaWeek,today'
 			},
-			height: $(window).height()-300,
+			height: $(window).height()-200,
 			editable: false,
-			minTime: "08:00:00",
+			minTime: "07:00:00",
 			maxTime: "20:00:00",
 			slotDuration: "00:30:00",
+			fixedWeekCount: false,
 			eventLimit: true, // allow "more" link when too many events
 			events: "",
-			eventRender: function (event, element) {
-			    //element.find('span.fc-title').html(element.find('span.fc-title').text());
-			    
-    element.find(".fc-event-title").remove();
-    element.find(".fc-event-time").remove();
-    var new_description =   
-        moment(event.start).format("HH:mm") + '-'
-        + moment(event.end).format("HH:mm") + '<br/>'
-        + 'cuctomer' + '<br/>'
-        + '<strong>Address: </strong><br/>' + 'cust address' + '<br/>'
-        + '<strong>Task: </strong><br/>' + 'cust 123' + '<br/>'
-        + '<strong>Place: </strong>' + 'xust vbnm' + '<br/>'
-    ;
-    element.append(new_description);
+			
+			eventRender: function (event, element, view) {				
+				if(tempVar!='')
+					$(tempVar).css('background-color', 'white');
+				
+				if(view.name == 'month'){
+					$("#divGrid").show();
+					$('#calendar').fullCalendar('option', 'height', $(window).height()-300);
+				}else{
+				    element.qtip({
+				        content: '<ul><li>'+event.mrn+'</li><li>'+event.title+'</li><li>'+ event.icnum +'</li><li>'+event.telhp+'</li><li>'+event.telno+'</li></ul>',
+				        position:{
+				            target: 'mouse'
+				        },
+				        /*show: { event: 'click' },*/
+				        hide: { event: 'click mouseleave' },
+				        style: { 
+				            width: 200,
+				            padding: 5,
+				            color: 'black',
+				            textAlign: 'left',
+				            border: {
+				                width: 1,
+				                radius: 3
+				            },
+				            classes: 'custSideTip'
+				        } 
+				    });     
 
-			    
-			},
-			dayClick: function(date, jsEvent, view) {
-		        if(view.name == 'agendaDay'){
-		        	$('#schDateTime_3').val(date.format());
-		        	//$("#dialog-form").dialog("open");
-		        	$("#create-appt").trigger( "click" );
-		        	
-		        }else{
-					$('#calendar').fullCalendar('changeView', 'agendaDay');
-					$('#calendar').fullCalendar('gotoDate', date);
+					$("#divGrid").hide();
+					$('#calendar').fullCalendar('option', 'height', $(window).height());
 				}
-	        },
-		    eventClick: function(event) {
-		        if (event.color == 'red') {
-		            return false;
-		        }
-		        		        
-		        if (event.id != '') {
-		        	$("#create-appt").trigger( "click" );
-		        	Doctor.init_appointment(event.id);
-		        }
-		    }
-		});
+				
+				element.css('font-size','15px');
+			
+				if(view.name == 'month' && event.color != 'red' && event.color != 'orange'){
+					element.find('span.fc-title').html(element.find('span.fc-title').text());
+				    element.find(".fc-title").remove();
+				    element.find(".fc-time").remove();
 
+				    var new_description =   
+				        '<br/><div style="margin-top:-15px">'+ event.test + '</div><br/>';
+				    element.append(new_description);
+					//element.css('background-color', '#0073ea');
+					element.css('background-color', '#ffffff');
+					element.css('border-color', '#ffffff');
+					element.css('color', '#000000');
+				}			
+        
+			},
+			dayRender: function(date, cell){
+				$('.qtip').remove();
+								
+				if (moment().diff(date,'days') < 0){
+		            //cell.css("background-color","#FAFAFA");
+		        }
+		    },
+		    dayClick: function(date, jsEvent, view) {
+				
+               lastdateclick = date.format();
+                
+		        var today=new Date();
+		        
+		        if(today.getHours() != 0 && today.getMinutes() != 0 && 
+		           today.getSeconds() != 0 && today.getMilliseconds() != 0){
+		            today.setHours(0,0,0,0);
+		        }
+		        
+        		str_today = (today.getFullYear())+'-'+('0'+(today.getMonth() + 1)).slice(-2)+'-'+('0'+today.getDate()).slice(-2);
+
+		        if(view.name != 'agendaDay'){
+			      	jQuery("#gridDialog").jqGrid().setGridParam({url : "/_research/webms/assets/php/entry_appt.php?action=get_all_calendar&id="+$('#docid').val()+"&start="+date.format()+"&end="+date.format()+"&typ=grid"}).trigger("reloadGrid")
+			      	
+			        if (tempVar == "")
+			        {
+						if(str_today == date.format()){
+							$(this).css('background-color', '#fcf8e3');
+			            	tempVar = '';
+						}else{
+				            $(this).css('background-color', '#B1C4BD');
+			            	tempVar = this;
+			            }		            
+			        }
+			        else
+			        {
+						if(str_today == date.format()){
+							$(this).css('background-color', '#fcf8e3');
+			            	$(tempVar).css('background-color', 'white');
+			            	tempVar = '';
+						}else{				
+			            	$(this).css('background-color', '#B1C4BD');						
+			            	$(tempVar).css('background-color', 'white');
+			           		tempVar = this;
+			            }
+			        }
+		        }
+		        
+
+				//code for dblclick
+				prevTime = typeof currentTime === 'undefined' || currentTime === null
+                    ? new Date().getTime() - 1000000
+                    : currentTime;
+                currentTime = new Date().getTime();
+
+               if (currentTime - prevTime < 500 && (date.format() == lastdateclick))
+                {
+                    //double click call back
+                    console.log("this is double click 1");
+		            $('#calendar').fullCalendar('changeView', 'agendaDay');
+		            $('#calendar').fullCalendar('gotoDate', date);
+		            
+					if(view.name == 'agendaDay'){
+						console.log($('#formstatus').val());
+						if($('#formstatus').val() != 'new'){
+					    	$('#schDateTime').val(date.format());
+					    	$("#create-appt").trigger( "click" );
+					    }else{
+					    	if(str_today > date.format()){
+					    		alert('Appointment cannot be back dated!');
+					    		return;
+					    	}
+					    	
+					    	if(date.format().split('T').length < 2){
+					    		alert('Error date format. Please try again!');
+					    		return;
+					    	}
+					    		
+					    	$('#schDateTime').val(date.format());
+							$("#dialog-form").dialog("open");
+					    }        	
+					}
+               }
+                //end of code dblclick
+                
+	        },
+		    eventClick: function(event, jsEvent, view) {
+		    
+				//code for dblclick
+				prevTime = typeof currentTime === 'undefined' || currentTime === null
+                    ? new Date().getTime() - 1000000
+                    : currentTime;
+                currentTime = new Date().getTime();
+
+				if (currentTime - prevTime < 500)
+				{
+				    //double click call back
+				    console.log("this is double click 2");
+					if (event.color != 'red' && event.color != 'orange') {
+					    if(view.name == 'month' && event.id != ''){
+					        $('#calendar').fullCalendar('changeView', 'agendaDay');
+					        $('#calendar').fullCalendar('gotoDate', event.start);
+					    }else{
+					    	if($('#formstatus').val() != 'new'){
+					    		Doctor.init_appointment(event.id);
+					    	}
+					    	$('#schDateTime').val(event.start);
+					        $("#dialog-form").dialog("open");
+					    }
+					}
+				}
+				
+				if(EventtempVar == '' && view.name == 'month'){
+					$(this).css('background-color', '#B1C4BD');
+	            	$(EventtempVar).css('background-color', 'white');
+	            	EventtempVar = this;
+		      		
+		      		jQuery("#gridDialog").jqGrid().setGridParam({url : "/_research/webms/assets/php/entry_appt.php?action=get_all_calendar&id=&start=&end=&typ=grid"}).trigger("reloadGrid")
+				}
+
+
+		    }
+   		});
 
 		jQuery("#gridDialog").jqGrid({ 
 			url:"/_research/webms/assets/php/entry_appt.php?action=get_all_calendar&id=&start=&end=&typ=grid", 
@@ -102,14 +249,16 @@ var Doctor = function () {
 		        //console.log(jobNumber);
 		        //document.location.href = "./jobflow?token=view&" + jobNumber ;
 		        //populate_appt_dtl(rowData['id']);
+	                $("#dialog-form").dialog("open");
+	                //$('#cmb_doctor_3').val($('#cmb_doctor').val());
+		        	//Doctor.init_appointment(event.id);
 		        Doctor.init_appointment(rowData['id']);
 		        $('.nav-tabs li:eq(0) a').tab('show'); 
 		    }
 		});
 
-
 		jQuery("#gridDialog").jqGrid('navGrid','#gridDialogPager',{edit:false,add:false,del:false});
-		
+
 		first_load_1();
 
 	}
@@ -226,12 +375,9 @@ var Doctor = function () {
 	            }
 	        };
 	        	
-	        	console.log('remove cal');
 	        $('#calendar').fullCalendar( 'removeEventSource', events);
-	        	console.log('remove cal');
 	        $('#calendar').fullCalendar( 'addEventSource', events);         
 	        $('#calendar').fullCalendar( 'refetchEvents' );
-	        	console.log('remove cal');
 	        
 	        //$('#schDateTime').val('');
 	          			
@@ -279,19 +425,23 @@ var Doctor = function () {
             {
                 //$('.selPat option[value="N106228"]');
                 //$('#cmb_patient option[value="'+value.mrn+'"]').attr("selected", "selected");
-                $("#schDateTime_3").val(value.apptdate+'T'+value.appttime);
+                $("#schDateTime").val(value.apptdate+'T'+value.appttime);
                 $("#patStatus").val(value.apptstatus);
                 $("#patIc").val(value.icnum);
-                $("#patIc-3").val(value.icnum);
-                $("#patName-3").val(value.Name);
-                $("#cmb_mrn-3").val(value.MRN);
-                $("#patContact-3").val(value.telh);
-                $("#patHp-3").val(value.telhp);
-                $("#patFax-3").val(value.telo);
+                $("#patIc3").val(value.icnum);
+                $("#patName3").val(value.Name);
+                $("#cmb_mrn3").val(value.MRN);
+                $("#patContact3").val(value.telh);
+                $("#patHp3").val(value.telhp);
+                $("#patFax3").val(value.telo);
                 $("#docid").val(value.prov_id);
                 $("#cmb_doctor").val(value.description);
                 $("#cmb_doctor-2").val(value.description);
+                $("#cmb_doctor").val(value.description);
                
+                $("#patLastUpdate").val(value.lastupdate);
+                $("#patUpdateBy").val(value.lastuser);
+
                 $("#txt_doc").html(value.description);
                 $("#txt_appt").html(value.apptdate+'T'+value.appttime);
                 $("#txt_name").html(value.Name);
@@ -313,6 +463,28 @@ var Doctor = function () {
 
     }
 
+    function get_appt_lst(frm,docid)
+    {
+    	if(docid == '')
+    		return;
+    		
+        $.getJSON( "/_research/webms/assets/php/entry_appt.php?action=get_appt_lst&docid="+docid, function(data)
+        {
+            //console.log(data.appt_lst);
+
+            $.each(data.appt_lst, function (index, value) 
+            {
+            	if(frm == 'sbTwo'){
+	                $("#"+frm).append('<option value="'+value.sysno+'" disabled="disabled">'+value.sysno+'|'+value.icnum+'</option>');
+	            }else{
+                	$("#"+frm).append('<option value="'+value.sysno+'">'+value.sysno+'|'+value.icnum+'</option>');
+                }
+            });
+            
+        });
+    }
+    
+   
     function get_all_calendar(doc_id)
     {
     	if(doc_id == '')
@@ -334,7 +506,14 @@ var Doctor = function () {
    
     function save_appt_dtl(){
         $.getJSON( "/_research/webms/assets/php/entry_appt.php?action=save_appt_dtl",
-        { icnum:$("#patIc").val(),apptdate:$("#schDateTime").val().split("T")[0],appttime:$("#schDateTime").val().split("T")[1],mrn:$("#cmb_mrn").val(),pat_name:$("#patName").val(),remarks:$("#cmb_mrn").val() }, 
+        { 
+        	icnum:$("#patIc").val(),
+        	apptdate:$("#schDateTime").val().split("T")[0],
+        	appttime:$("#schDateTime").val().split("T")[1],
+        	mrn:$("#cmb_mrn").val(),
+        	pat_name:$("#patName").val(),
+        	remarks:$("#cmb_mrn").val() 
+        }, 
         function(data)
         {
             populate_all_calendar(data.appointment);
@@ -343,7 +522,7 @@ var Doctor = function () {
 	}
 	
     function appt_cleanup(){
-    	console.log('adf');
+    	console.log('data cleanup');
         $.getJSON( "/_research/webms/assets/php/entry_appt.php?action=appt_cleanup",
         function(data)
         {
@@ -383,6 +562,10 @@ var Doctor = function () {
         	save_appt_dtl();
         },
         
+        init_appt_lst: function (frm,docid) {
+        	get_appt_lst(frm,docid);
+        },
+
         init_load: function () {        
         	first_load();
         }
@@ -391,6 +574,18 @@ var Doctor = function () {
 }();
 
 function FcGoToDate(){
-	cmbdt = new Date($('#cmb_day').val()+' '+$('#cmb_month').val()+' '+$('#cmb_year').val());
+	var monthNames = ["January", "February", "March", "April", "May", "June",
+	  "July", "August", "September", "October", "November", "December"
+	];
+	
+	cmbdt = new Date('01 '+monthNames[$('#cmb_month').val()]+' '+$('#cmb_year').val());
+
 	$('#calendar').fullCalendar( 'gotoDate', cmbdt );
+	$('#calendar').fullCalendar('changeView', 'month');
+
+}
+
+function selCalendar(){
+	$("#dialog-form").dialog("close");
+	
 }
