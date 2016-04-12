@@ -12,9 +12,12 @@
 	
 	// getting all possible and valid action URL
 	$possible_url = array(
+							"get_casetype",
 							"get_all_doctor",
+							"get_doctor_info",
 							"get_all_patient",
 							"get_patient_dtl",
+							"get_appt_lst",
 							"get_appt_dtl",
 							"save_appt_dtl",
 							"upd_appt_dtl",
@@ -32,6 +35,14 @@
 		    	$DoctorModel = new DoctorModel($conn);
 		    	$value = $DoctorModel->get_all_doctor($_GET["term"]);
 		        break;
+		    case "get_doctor_info":
+		    	$DoctorModel = new DoctorModel($conn);
+		    	$value = $DoctorModel->get_doctor_info($_GET["id"]);
+		        break;
+		    case "get_casetype":
+		    	$DoctorModel = new DoctorModel($conn);
+		    	$value = $DoctorModel->get_casetype($_GET["id"]);
+		        break;
 		    case "get_all_patient":
 		    	$PatientModel = new PatientModel($conn);
 		    	$value = $PatientModel->get_all_patient($_GET["typ"],$_GET["term"]);
@@ -45,6 +56,11 @@
 		    	$CalendarModel = new CalendarModel ($conn);
 		    	
 		    	$value = $CalendarModel ->appt_cleanup();
+		        break;
+		    case "get_appt_lst":
+		    	$ApptModel = new ApptModel ($conn);
+		    	
+		    	$value = $ApptModel ->get_appt_lst($_GET["docid"]);
 		        break;
 		    case "get_appt_dtl":
 		    	$ApptModel = new ApptModel ($conn);

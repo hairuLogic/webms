@@ -62,6 +62,31 @@ h2 {
 .auto-style1 {
 	text-decoration: underline;
 }
+.add_input {
+	width: 80%;
+	display: inline-block;
+	vertical-align: bottom;
+}
+.add input {
+	/*background:url(add.png);*/
+    display: inline-block;
+	width: 30px;
+	/*border-radius: 0px 5px 5px 0px;*/
+	font-weight: 700;
+}
+.sel_date{
+	width:150px;
+	display:inline-block;
+}
+
+.custSideTip
+{
+    position:fixed !important;
+    right:0 !important;
+    max-width:200px !important;
+    background-color:white;
+}
+
 </style>
 <meta charset="utf-8" />
 <title>Appointment - Doctor</title>
@@ -69,47 +94,54 @@ h2 {
 
 <body>
 
-<div style="background-color: #99CCFF; height: 45px; display: none">
-	<div style="float: left; width: 40%; padding: 5px">
-		<div style="height: 40px">
-		</div>
-	</div>
-	<div style="float: right; width: 60%; padding: 5px; text-align: right">
-		<div style="height: 40px">
-			<!--button id="create-new">New Appointment</button--></div>
-	</div>
-</div>
-
-<div style="float: left; width: 100%; padding: 5px">
-	<div style="padding: 15px; height:60px; text-align: left; margin: 10px 5px; border: thin silver solid">
-		<div id="dvmenu" style="float: left; width:60%">
+<div style="width: 100%; padding: 5px">
+	<div class="row" style="border:1px silver solid; padding:10px 0px 10px 0px;margin:5px 2px 20px 2px">
+		<div class="col-sm-7">
 			<input id="docid" name="docid" type="hidden">
-			<input id="cmb_doctor" class="form-control input-sm" name="cmb_doctor" placeholder="select doctor" type="text"><br>
-			<select id="cmb_day" style="display:none"><option value="1">1</option><option value="2">2</option></select>
-			<select id="cmb_month"><option value="January">January</option><option value="February">February</option></select>
-			<select id="cmb_year"><option value="2015">2015</option><option value="2016">2016</option></select>
-			<input type="button" onclick="FcGoToDate()" value="Goto Date">
-	
-		</div>
-		<div id="dvmenu2" style="float: right; width:40%; text-align:right">		
-			<input type="button" id="create-appt" class="btn" value="New Appointment">&nbsp; <input type="button" class="btn" value="Transfer">
-		</div>
-		<!--h5>Appointment</h5>
-		<input type="button" value="Show today appointment" onclick="Doctor.init_load();"><br>
-		<input id="schDateTime" class="form-control input-sm" name="schDateTime" placeholder="*date selected from calendar" readonly type="hidden"><br>
-		<input id="patIc" class="form-control input-sm" name="patIc" placeholder="select patient IC" type="text"><br-->
-	</div>
+			<input id="cmb_doctor" class="add_input form-control input-sm" name="qty" name="cmb_doctor" placeholder="select doctor" type="text" value="" /><a class="add">
+			<input class="form-control input-sm" type="button" onclick="$('#dialog-doctor-info').dialog('open');" value="i" />
+			<input class="form-control input-sm" type="button" value="..." />
+			</a>
+			<!--input id="cmb_doctor" class="form-control input-sm" name="cmb_doctor" placeholder="select doctor" type="text"><br-->
 			
-
-
-</div>
-
-<div style="float: left; width: 100%; padding: 5px">
+		</div>
+		<div class="col-sm-5" style="text-align:right">
+			<input id="create-appt" class="btn" type="button" value="New Appointment">&nbsp;
+			<input id="new-transfer" class="btn" type="button" value="Transfer">&nbsp;
+			<input class="btn" type="button" value="Search">
+		</div>
+	</div>
+	<div style="float:left">
+		<select id="cmb_month" class="sel_date form-control input-sm" style="width:100px">
+		<option value="0">January</option>
+		<option value="1">February</option>
+		<option value="2">March</option>
+		<option value="3">April</option>
+		<option value="4">May</option>
+		<option value="5">June</option>
+		<option value="6">July</option>
+		<option value="7">August</option>
+		<option value="8">September</option>
+		<option value="9">October</option>
+		<option value="10">November</option>
+		<option value="11">December</option>
+		</select> <select id="cmb_year" class="sel_date form-control input-sm" style="width:70px">
+		<option value="2015">2015</option>
+		<option value="2016">2016</option>
+		<option value="2017">2017</option>
+		<option value="2018">2018</option>
+		<option value="2019">2019</option>
+		<option value="2020">2020</option>
+		</select> <input class="btn sel_date" style="width:40px" onclick="FcGoToDate()" type="button" value="Go">
+	</div>
 	<div id="calendar">
 	</div>
 </div>
-<div style="float: right; width: 100%; padding: 5px; text-align: right">
-	<ul class="nav nav-tabs" style="display:none">
+<table style="font-size:10px;margin:10px"><tr style="text-align:center;"><td rowspan="2" style="vertical-align:top;font-weight:bold">Legend:</td><td style="width:50px"><img alt="Open" src="../../../../assets/img/icon/i-open.jpg" width="20px" /></td><td style="width:50px"><img alt="Open" src="../../../../assets/img/icon/i-attend.jpg" width="15" /></td><td style="width:50px"> <img alt="Open" src="../../../../assets/img/icon/i-xattend.jpg" width="15" /></td><td style="width:50px"> <img alt="Open" src="../../../../assets/img/icon/i-cancel.jpg" width="15" /></td></tr>
+<tr style="text-align:center"><td>Open</td><td>Attend</td><td>Not Attend</td><td>Cancel</td></tr></table>
+									
+<div id="divGrid" style="float: right; width: 100%; padding: 5px; text-align: right">
+	<ul class="nav nav-tabs" style="display: none">
 		<li class="active"><a data-toggle="tab" href="#search">Appoinment List</a></li>
 		<li><a data-toggle="tab" href="#appt">Appointment Detail</a></li>
 		<li><a data-toggle="tab" href="#apptnew">New Appointment</a></li>
@@ -117,240 +149,18 @@ h2 {
 	<div class="tab-content">
 		<div id="search" class="tab-pane fade in active" style="text-align: left">
 			<!--h4>Search Criteria</h4-->
-			
 			<div id="gridDialogPager">
 			</div>
 			<table id="gridDialog" class="table table-striped" style="width: 100%">
 			</table>
 		</div>
-		<div id="appt" class="tab-pane fade in">
-		
-			<!--label class="col-md-2 control-label" for="name">Status</label>  
-			<div class="col-md-10">
-				<select id="cmb_status" class="form-control" name="cmb_status">
-				<option value="Open">Open</option>
-				</select><br>
-			</div--><label class="col-md-2 control-label" for="name">Date/Time:
-			</label>
-			<div class="col-md-10 selPat">
-				<input id="schDateTime-2" class="form-control input-sm" name="schDateTime-2" readonly type="text"><br>
-			</div>
-			<label class="col-md-2 control-label" for="name">Doctor: </label>
-			<div class="col-md-10 selPat">
-				<input id="cmb_doctor-2" class="form-control input-sm" name="cmb_doctor-2" readonly type="text"><br>
-			</div>
-			<label class="col-md-2 control-label" for="status">Status</label>
-			<div class="col-md-10">
-				<select id="patStatus" class="form-control" name="patStatus">
-				<option value="Open">Open</option>
-				<option value="Attend">Attend</option>
-				<option value="Cancel">Cancel</option>
-				</select><br></div>
-			<label class="col-md-2 control-label" for="name">MRN</label>
-			<div class="col-md-10 selPat">
-				<input id="cmb_mrn" class="form-control" name="cmb_mrn" type="text"><br>
-			</div>
-			<label class="col-md-2 control-label" for="name">IC No.</label>
-			<div class="col-md-10">
-				<input id="patIc-2" class="form-control input-sm" name="patIc-2" type="text"><br>
-			</div>
-			<label class="col-md-2 control-label" for="name">Name</label>
-			<div class="col-md-10">
-				<input id="patName" class="form-control input-sm" data-validation="required" name="patName" type="text"><br>
-			</div>
-			<label class="col-md-2 control-label" for=""></label>
-			<div class="col-md-10">
-				<table>
-					<tr>
-						<td><label class="col-md-4 control-label" for="name">Telephone</label>
-						<div class="col-md-8">
-							<input id="patContact" class="form-control input-sm" data-validation="required" name="patContact" type="text"><br>
-						</div>
-						</td>
-						<td><label class="col-md-4 control-label" for="name">Handphone</label>
-						<div class="col-md-8">
-							<input id="patHp" class="form-control input-sm" data-validation="required" name="patHp" type="text"><br>
-						</div>
-						</td>
-					</tr>
-					<tr>
-						<td><label class="col-md-4 control-label" for="name">Tel. 
-						Office</label>
-						<div class="col-md-8">
-							<input id="patFax" class="form-control input-sm" data-validation="required" name="patFax" type="text"><br>
-						</div>
-						</td>
-						<td></td>
-					</tr>
-				</table>
-			</div>
-			<label class="col-md-2 control-label" for="name">Case</label>
-			<div class="col-md-10">
-				<input id="patCase" class="form-control input-sm" data-validation="required" name="patCase" type="text"><br>
-			</div>
-			<label class="col-md-2 control-label" for="name">Remarks</label>
-			<div class="col-md-10">
-				<textarea id="patNote" class="form-control input-sm" data-validation="required" name="patNote" type="text"></textarea><br>
-			</div>
-			<!--label class="col-md-2 control-label" for="name">Contact No.</label>
-			<div class="col-md-10">
-			<input id="patContact" name="patContact" type="text" class="form-control input-sm" data-validation="required"><br>
-			</div-->
-			<h5 style="padding-right: 15px">
-			<!--button id="create-new" name="create-new">New Appointment</button>
-			<button id="btn-cancel">Check Appointment</button-->
-			<input type="button" value="Update">
-			</h5>
-		</div>
-		<div id="apptnew" class="tab-pane fade in">
-			<label class="col-md-2 control-label" for="name">Doctor: </label>
-			<div class="col-md-10 selPat">
-				<input id="cmb_doctor-3" class="form-control input-sm" name="cmb_doctor-3" type="text"><br>
-			</div>
-			<label class="col-md-2 control-label" for="name">Date/Time:
-			</label>
-			<div class="col-md-10 selPat">
-				<input id="schDateTime-3" class="form-control input-sm" name="schDateTime-3" readonly type="text" placeholder="Please select datetime from calendar"><br>
-			</div>
-			<label class="col-md-2 control-label" for="status">Status</label>
-			<div class="col-md-10">
-				<select id="patStatus" class="form-control" name="patStatus">
-				<option value="Open">Open</option>
-				<option value="Attend">Attend</option>
-				<option value="Cancelled">Cancelled</option>
-				</select><br></div>
-			<label class="col-md-2 control-label" for="name">MRN</label>
-			<div class="col-md-10 selPat">
-				<input id="cmb_mrn-3" class="form-control" name="cmb_mrn-3" type="text"><br>
-			</div>
-			<label class="col-md-2 control-label" for="name">IC No.</label>
-			<div class="col-md-10">
-				<input id="patIc-3" class="form-control input-sm" name="patIc-3" type="text"><br>
-			</div>
-			<label class="col-md-2 control-label" for="name">Name</label>
-			<div class="col-md-10">
-				<input id="patName-3" class="form-control input-sm" data-validation="required" name="patName-3" type="text"><br>
-			</div>
-			<label class="col-md-2 control-label" for=""></label>
-			<div class="col-md-10">
-				<table>
-					<tr>
-						<td><label class="col-md-4 control-label" for="name">Telephone</label>
-						<div class="col-md-8">
-							<input id="patContact-3" class="form-control input-sm" data-validation="required" name="patContact-3" type="text"><br>
-						</div>
-						</td>
-						<td><label class="col-md-4 control-label" for="name">Handphone</label>
-						<div class="col-md-8">
-							<input id="patHp-3" class="form-control input-sm" data-validation="required" name="patHp-3" type="text"><br>
-						</div>
-						</td>
-					</tr>
-					<tr>
-						<td><label class="col-md-4 control-label" for="name">Tel. 
-						Office</label>
-						<div class="col-md-8">
-							<input id="patFax-3" class="form-control input-sm" data-validation="required" name="patFax-3" type="text"><br>
-						</div>
-						</td>
-						<td></td>
-					</tr>
-				</table>
-			</div>
-			<label class="col-md-2 control-label" for="name">Case</label>
-			<div class="col-md-10">
-				<input id="patCase" class="form-control input-sm" data-validation="required" name="patCase" type="text"><br>
-			</div>
-			<label class="col-md-2 control-label" for="name">Remarks</label>
-			<div class="col-md-10">
-				<textarea id="patNote" class="form-control input-sm" data-validation="required" name="patNote" type="text"></textarea><br>
-			</div>
-			<!--label class="col-md-2 control-label" for="name">Contact No.</label>
-			<div class="col-md-10">
-			<input id="patContact" name="patContact" type="text" class="form-control input-sm" data-validation="required"><br>
-			</div-->
-			<h5 style="padding-right: 15px">
-			<input type="button" value="Save">
-			<!--button id="create-new" name="create-new">New Appointment</button>
-			<button id="btn-cancel">Check Appointment</button--></h5>
-		</div>
 	</div>
 </div>
-<div id="dialog-form" style="display: none" title="Appointment Detail">
-	<div id="apptnew" class="tab-pane fade in">
-			<label class="col-md-2 control-label" for="name">Doctor1: </label>
-			<div class="col-md-10 selPat">
-				<input id="cmb_doctor_3" class="form-control input-sm" name="cmb_doctor_3" type="text"><br>
-			</div>
-			<label class="col-md-2 control-label" for="name">Date/Time:
-			</label>
-			<div class="col-md-10 selPat">
-				<input id="schDateTime_3" class="form-control input-sm" name="schDateTime_3" readonly type="text" placeholder="Please select datetime from calendar"><br>
-			</div>
-			<label class="col-md-2 control-label" for="status">Status</label>
-			<div class="col-md-10">
-				<select id="patStatus" class="form-control" name="patStatus">
-				<option value="Open">Open</option>
-				<option value="Attend">Attend</option>
-				<option value="Cancelled">Cancelled</option>
-				</select><br></div>
-			<label class="col-md-2 control-label" for="name">MRN</label>
-			<div class="col-md-10 selPat">
-				<input id="cmb_mrn-3" class="form-control" name="cmb_mrn-3" type="text"><br>
-			</div>
-			<label class="col-md-2 control-label" for="name">IC No.</label>
-			<div class="col-md-10">
-				<input id="patIc-3" class="form-control input-sm" name="patIc-3" type="text"><br>
-			</div>
-			<label class="col-md-2 control-label" for="name">Name</label>
-			<div class="col-md-10">
-				<input id="patName-3" class="form-control input-sm" data-validation="required" name="patName-3" type="text"><br>
-			</div>
-			<label class="col-md-2 control-label" for=""></label>
-			<div class="col-md-10">
-				<table>
-					<tr>
-						<td><label class="col-md-4 control-label" for="name">Telephone</label>
-						<div class="col-md-8">
-							<input id="patContact-3" class="form-control input-sm" data-validation="required" name="patContact-3" type="text"><br>
-						</div>
-						</td>
-						<td><label class="col-md-4 control-label" for="name">Handphone</label>
-						<div class="col-md-8">
-							<input id="patHp-3" class="form-control input-sm" data-validation="required" name="patHp-3" type="text"><br>
-						</div>
-						</td>
-					</tr>
-					<tr>
-						<td><label class="col-md-4 control-label" for="name">Tel. 
-						Office</label>
-						<div class="col-md-8">
-							<input id="patFax-3" class="form-control input-sm" data-validation="required" name="patFax-3" type="text"><br>
-						</div>
-						</td>
-						<td></td>
-					</tr>
-				</table>
-			</div>
-			<label class="col-md-2 control-label" for="name">Case</label>
-			<div class="col-md-10">
-				<input id="patCase" class="form-control input-sm" data-validation="required" name="patCase" type="text"><br>
-			</div>
-			<label class="col-md-2 control-label" for="name">Remarks</label>
-			<div class="col-md-10">
-				<textarea id="patNote" class="form-control input-sm" data-validation="required" name="patNote" type="text"></textarea><br>
-			</div>
-			<!--label class="col-md-2 control-label" for="name">Contact No.</label>
-			<div class="col-md-10">
-			<input id="patContact" name="patContact" type="text" class="form-control input-sm" data-validation="required"><br>
-			</div-->
-			<h5 style="padding-right: 15px">
-			<input type="button" value="Save">
-			<!--button id="create-new" name="create-new">New Appointment</button>
-			<button id="btn-cancel">Check Appointment</button--></h5>
-		</div>
-	
-</div>
+<?php 
+	include_once('appt_form.php'); 
+	include_once('appt_transfer.php');
+	include_once('doc_info.php');
+?>
 <script src="../../../../assets/plugins/jquery.min.js" type="text/ecmascript"></script>
 <script src="../../../../assets/plugins/trirand/i18n/grid.locale-en.js" type="text/ecmascript"></script>
 <script src="../../../../assets/plugins/trirand/jquery.jqGrid.min.js" type="text/ecmascript"></script>
@@ -366,6 +176,7 @@ h2 {
 <!-- JS Customization -->
 <script src="../../../../assets/js/doctor.js"></script>
 <script src="../../../../assets/js/cmbautoselect.js"></script>
+<script src="http://cdn.jsdelivr.net/qtip2/2.2.1/jquery.qtip.min.js"></script>
 <!-- JS Page Level --><span class="auto-style1">
 <script>
     jQuery(document).ready(function() 
@@ -383,7 +194,7 @@ h2 {
                 $("#txt_tel").html($("#patContact").val());
                 $("#txt_hp").html($("#patHp").val());
 
-				$( "#dialog1" ).dialog( "open" );
+				//$( "#dialog1" ).dialog( "open" );
 			});
 	
 			$( "#create-transfer" ).button().on( "click", function() {
@@ -402,7 +213,7 @@ h2 {
 				$('.nav-tabs li:eq(0) a').tab('show'); 
 			});
 
-		$("#dialog1").dialog(
+/*		$("#dialog1").dialog(
 		{
 		    autoOpen: false, 
 		    modal: true,
@@ -415,7 +226,7 @@ h2 {
 		        $('.ui-widget-overlay').removeClass('custom-overlay');
 		    }            
 		});
-        
+*/        
         
 		$('#cmb_patient').change( function(){
             $("#patIc").val('');
@@ -434,7 +245,7 @@ h2 {
 		        }, function(data) {
 		            var array = data.error ? [] : $.map(data.patient, function(m) {
 		                return {
-		                    label: m.Name,
+		                    label: m.MRN +' | '+ m.Name,
 		                    value: m.MRN
 		                };
 		            });
@@ -443,7 +254,7 @@ h2 {
 		    },
 		    select: function (event, ui) {
 		    	$("#cmb_mrn").val(ui.item.value);
-		    	$("#patName").val(ui.item.label);
+		    	//$("#patName").val(ui.item.label);
 		    	Doctor.init_patient(ui.item.value);
 		    	return false;
 		    }
@@ -457,7 +268,7 @@ h2 {
 		        }, function(data) {
 		            var array = data.error ? [] : $.map(data.patient, function(m) {
 		                return {
-		                    label: m.Name,
+		                    label: m.Newic+' | '+m.Name,
 		                    value: m.Newic
 		                };
 		            });
@@ -466,7 +277,7 @@ h2 {
 		    },
 		    select: function (event, ui) {
 		    	$("#cmb_mrn").val(ui.item.value);
-		    	$("#patName").val(ui.item.label);
+		    	$("#patName3").val(ui.item.label);
 		    	Doctor.init_patient(ui.item.value);
 		    	return false;
 		    }
@@ -480,7 +291,7 @@ h2 {
 		        }, function(data) {
 		            var array = data.error ? [] : $.map(data.patient, function(m) {
 		                return {
-		                    label: m.Newic,
+		                    label: m.Newic+' | '+m.Name,
 		                    value: m.Newic
 		                };
 		            });
@@ -491,30 +302,6 @@ h2 {
 		    	//$("#cmb_mrn").val(ui.item.value);
 		    	$("#patIc").val(ui.item.label);
 		    	Doctor.init_patient(ui.item.value);
-		    	return false;
-		    }
-		});
-
-		$("#patIc-3").autocomplete({
-			source: function(request, response) {
-		        $.getJSON("/_research/webms/assets/php/entry_appt.php?action=get_all_patient", {
-		            term: request.term,
-		            typ: 'Newic'
-		        }, function(data) {
-		            var array = data.error ? [] : $.map(data.patient, function(m) {
-		                return {
-		                    label: m.Newic,
-		                    value: m.Newic
-		                };
-		            });
-		            response(array);
-		        });
-		    },
-		    select: function (event, ui) {
-		    	//$("#cmb_mrn").val(ui.item.value);
-		    	$("#patIc").val(ui.item.label);
-		    	$("#patIc-3").val(ui.item.label);
-		    	Doctor.init_patient_dtl(ui.item.value);
 		    	return false;
 		    }
 		});
@@ -566,45 +353,184 @@ h2 {
 		    }
 		});
 
+		$("#cmbdoctorTo").autocomplete({
+			source: function(request, response) {
+		        $.getJSON("/_research/webms/assets/php/entry_appt.php?action=get_all_doctor", {
+		            term: request.term
+		        }, function(data) {
+		            var array = data.error ? [] : $.map(data.doctor, function(m) {
+		                return {
+		                    label: m.description,
+		                    value: m.resourcecode
+		                };
+		            });
+		            response(array);
+		        });
+		    },
+		    select: function (event, ui) {
+		    	$("#cmbdoctorTo").val(ui.item.label);
+		    	$("#docidTo").val(ui.item.value);
+		    	Doctor.init_appt_lst('sbTwo',ui.item.value);
+		    	return false;
+		    }
+		});
+
+		$("#patCase").autocomplete({
+			source: function(request, response) {
+		        $.getJSON("/_research/webms/assets/php/entry_appt.php?action=get_casetype", {
+		            id: request.term
+		        }, function(data) {
+		            var array = data.error ? [] : $.map(data.casetype, function(m) {
+		                return {
+		                    label: m.description,
+		                    value: m.case_code
+		                };
+		            });
+		            response(array);
+		        });
+		    },
+		    select: function (event, ui) {
+		    	console.log(ui.item);
+		    	return false;
+		    }
+		});
+
 	});
 
 
 $(document).ready(function () {
-            $(function() {
-            $("#dialog-form").dialog({
-                autoOpen: false,
-                    maxWidth:600,
-                    maxHeight: 500,
-                    width: 600,
-                    height: 500,
-                    modal: true,
-                    buttons: {
-                    "Create": function() {
-                    $(this).dialog("close");
-                    },
-                    Cancel: function() {
-                    $(this).dialog("close");
-                    }
-                },
-                    close: function() {
-                }
-                });
+	$(function() {
+		$("#dialog-form").dialog({
+			autoOpen: false,
+			maxWidth:600,
+			maxHeight: 500,
+			width: 600,
+			height: 500,
+			modal: true,
+			buttons: {
+				"Create": function() {
+					//$(this).dialog("close");
+					console.log('save data');
+					$('form#frmAppt').submit();
+				},
+				Cancel: function() {
+					$(this).dialog("close");
+				}
+		    },
+			close: function() {}
+		});
+		
+		$("#dialog-transfer").dialog({
+			autoOpen: false,
+			maxWidth:$(window).width(),
+			maxHeight: $(window).height(),
+			width: $(window).width(),
+			height: $(window).height(),
+			modal: true,
+			buttons: {
+				"Update": function() {
+					GetAllId();},
+				Close: function() {
+					$(this).dialog("close");
+				}
+		    },
+			close: function() {}
+		});
+		
+		$("#dialog-doctor-info").dialog({
+			autoOpen: false,
+			maxWidth:600,
+			maxHeight: 500,
+			width: 600,
+			height: 500,
+			modal: true,
+			buttons: {
+				Close: function() {
+					$(this).dialog("close");
+				}
+		    },
+			close: function() {}
+		});
+	});
+
+    $("#create-appt")
+	    .button()
+	    .click(function() {
+	        if($('#docid').val() == ''){
+	        	alert('please select doctor!');
+	        	return;
+	        }
+        
+	        document.getElementById("frmAppt").reset();
+	        $("#formstatus").val('new');
+	        $("#dialog-form").dialog("open");
+ 	        $('#cmb_doctor_3').val($('#cmb_doctor').val());
+   	});
+
+    $("#new-transfer")
+	    .button()
+	    .click(function() {
+	    	console.log($('#docid').val());
+	    
+	        if($('#docid').val() == ''){
+	        	alert('please select doctor!');
+	        	return;
+	        }
+        
+	        $("#dialog-transfer").dialog("open");                
+	        $('#cmbdoctorFrom').val($('#cmb_doctor').val());
+	        console.log('goto appt llst');
+	        Doctor.init_appt_lst('sbOne',$('#docid').val());
+	    });
+
+
+        $(function () {
+            function moveItems(origin, dest) {
+                $(origin).find(':selected').appendTo(dest);
+            }
+
+            function moveAllItems(origin, dest) {
+                $(origin).children().appendTo(dest);
+            }
+
+            $('#left').click(function () {
+                moveItems('#sbTwo', '#sbOne');
             });
 
-            $("#create-appt")
-            .button()
-            .click(function() {
-                if($('#cmb_doctor').val() == ''){
-                	alert('please select doctor!');
-                	return;
-                }
-                $("#dialog-form").dialog("open");
-                $('#cmb_doctor_3').val($('#cmb_doctor').val());
-                
+            $('#right').on('click', function () {
+                moveItems('#sbOne', '#sbTwo');
+            });
+
+            $('#leftall').on('click', function () {
+                moveAllItems('#sbTwo', '#sbOne');
+            });
+
+            $('#rightall').on('click', function () {
+                moveAllItems('#sbOne', '#sbTwo');
             });
         });
-        
-        
+
+});
+
+
+var spacesToAdd = 5;
+var biggestLength = 0;
+$("#sbOne option").each(function(){
+var len = $(this).text().length;
+    if(len > biggestLength){
+        biggestLength = len;
+    }
+});
+var padLength = biggestLength + spacesToAdd;
+$("#sbOne option").each(function(){
+    var parts = $(this).text().split('+');
+    var strLength = parts[0].length;
+    for(var x=0; x<(padLength-strLength); x++){
+        parts[0] = parts[0]+' '; 
+    }
+    $(this).text(parts[0].replace(/ /g, '\u00a0')+'+'+parts[1]).text;
+});
+
 </script>
 </span>
 
